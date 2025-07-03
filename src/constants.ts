@@ -5,7 +5,7 @@ export const DATA_FILE_PATH = "./data/state.json";
 export const SHOWS_FILE_PATH = "./data/shows.jsonl";
 
 /** The CRON expression which dictates how often to run the scraper. */
-export const CRON_SCHEDULE = "0 */3 * * *";
+export const CRON_SCHEDULE = "*/10 * * * *";
 
 /** The number of pages of shows that exist in the TVmaze API at the time of writing */
 export const KNOWN_PAGES_LENGTH_MINIMUM = 342;
