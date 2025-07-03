@@ -1,6 +1,6 @@
 import path from "path";
 
-export const APP_PORT = 3000;
+export const APP_PORT = process.env.NODE_PORT || 3000;
 export const DATA_FILE_PATH = "./data/state.json";
 export const SHOWS_FILE_PATH = "./data/shows.jsonl";
 
