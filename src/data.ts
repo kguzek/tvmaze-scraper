@@ -1,7 +1,8 @@
-import { mkdir, readFile, writeFile } from "fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+
 import type { ProgramData } from "./types";
 import { DATA_FILE_PATH } from "./constants";
-import path from "path";
 
 function updateProgramData(newData?: ProgramData) {
   newData ??= programData;

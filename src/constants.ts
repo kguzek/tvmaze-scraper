@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 
 export const APP_PORT = process.env.NODE_PORT || 3000;
 export const DATA_FILE_PATH = "./data/state.json";

@@ -1,6 +1,7 @@
+import path from "node:path";
+
 import express from "express";
 import cron from "node-cron";
-import path from "path";
 
 import { APP_PORT, CRON_SCHEDULE, SCRAPED_FILES_PATH } from "./constants";
 import { loadProgramData, programData } from "./data";

@@ -1,6 +1,6 @@
 {
   "name": "tvmaze-scraper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A scraper of all TV shows found in the TVmaze API, used to sort shows by popularity.",
   "author": "Konrad Guzek",
   "homepage": "https://github.com/kguzek/tvmaze-scraper#readme",
@@ -17,11 +17,17 @@
     "build": "tsc",
     "start": "node dist/index.js"
   },
+  "module": "src/index.js",
   "files": [
     "dist",
     "LICENSE",
     "README.md"
   ],
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-cron": "^4.2.0",
+    "tvmaze-wrapper-ts": "^2.1.2"
+  },
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/node-cron": "^3.0.11",
@@ -30,11 +36,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
-  "module": "src/index.js",
-  "dependencies": {
-    "express": "^5.1.0",
-    "node-cron": "^4.2.0",
-    "tvmaze-wrapper-ts": "^2.1.2"
-  },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
+  "packageManager": "pnpm@10.17.0"
 }

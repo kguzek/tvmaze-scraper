@@ -1,14 +1,16 @@
+import { createReadStream } from "node:fs";
+import { appendFile, writeFile, rm, mkdir } from "node:fs/promises";
+import { createInterface } from "node:readline/promises";
+
 import { getAllShows, type Show } from "tvmaze-wrapper-ts";
-import { loadProgramData, programData, saveProgramData } from "./data";
-import { appendFile, writeFile, rm, mkdir } from "fs/promises";
+
 import {
   KNOWN_PAGES_LENGTH_MINIMUM,
   MOST_POPULAR_SHOWS_PATH,
   SHOWS_FILE_PATH,
   SHOWS_PAGE_LENGTH,
 } from "./constants";
-import { createReadStream } from "fs";
-import { createInterface } from "readline/promises";
+import { loadProgramData, programData, saveProgramData } from "./data";
 import { log } from "./logging";
 
 export async function scrapeNextPage() {
@@ -48,6 +50,12 @@ function* paginateArray<T>(arr: T[], pageLength: number) {
   }
 }
 
+/**
+ * Returns the show's average rating, or 5.0 if not available.
+ * @since 1.1.0
+ */
+const getShowRating = (show: Show) => show.rating.average ?? 5.0;
+
 /** Called when the scraper reaches the end of the TV show index.
  *  Sorts the TV shows by popularity and paginates them into even chunks.
  */
@@ -78,7 +86,7 @@ async function organiseAllShows() {
     programData.totalShows / SHOWS_PAGE_LENGTH,
   );
   await saveProgramData();
-  allShows.sort((a, b) => b.weight - a.weight);
+  allShows.sort((a, b) => getShowRating(b) - getShowRating(a));
   await rm(MOST_POPULAR_SHOWS_PATH, { recursive: true, force: true });
   await mkdir(MOST_POPULAR_SHOWS_PATH, { recursive: true });
 
