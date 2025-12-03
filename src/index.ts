@@ -10,18 +10,37 @@ import { log } from "./logging";
 
 const app = express();
 
+async function retryPromise<T>(
+  promise: () => Promise<T>,
+  delayMs = 10_000,
+  maxRetries = 10,
+) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await promise();
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        throw error;
+      }
+      log.error(`Attempt ${attempt} failed: ${error.message}`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw new Error(`Failed to execute promise after ${maxRetries} attempts`);
+}
+
+async function tryScrapeNextPage() {
+  try {
+    await retryPromise(scrapeNextPage);
+  } catch (error) {
+    log.error("Scrape failed:", error);
+  }
+}
+
 async function init() {
   await loadProgramData();
 
-  cron.schedule(CRON_SCHEDULE, async () => {
-    try {
-      await scrapeNextPage();
-    } catch (err) {
-      log.error("Scrape failed:", err);
-    }
-  });
-
-  await scrapeNextPage();
+  cron.schedule(CRON_SCHEDULE, tryScrapeNextPage);
 
   app.use("/shows", express.static(path.resolve(SCRAPED_FILES_PATH)));
 
@@ -47,6 +66,8 @@ async function init() {
       status: 404,
     });
   });
+
+  await tryScrapeNextPage();
 
   app.listen(APP_PORT, () => {
     log.info(`Server is running on http://localhost:${APP_PORT}`);
